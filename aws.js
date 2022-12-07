@@ -2,7 +2,7 @@
 
 /**Class for accessing AWS S3 */
 const AWS = require("aws-sdk");
-const uuid = require("uuid");
+const { v4: uuid } = require('uuid');
 const fsP = require("fs/promises");
 require("dotenv").config();
 
@@ -45,7 +45,7 @@ class PixlyAWS {
    /**
     * Read a local file from a given path
     */
-   static async readLocalFileFromPath() {
+   static async readLocalFileFromPath(filePath) {
       try {
          // changes file to binary buffer
          const result = await fsP.readFile("./hello.txt");
@@ -62,10 +62,10 @@ class PixlyAWS {
     * 
     * Returns the uploaded objects ETag
     */
-   static async putObjectInBasket(fileData, fileName, fileType){
-      
+   static async putObjectInBasket(fileData, fileName, fileType) {
+
       const keyVal = `${fileName}${uuid()}.${fileType}`
-      
+
       let params = {
          Body: fileData,
          Bucket: bucketName,
@@ -73,12 +73,11 @@ class PixlyAWS {
       };
 
       //  puts object in bucket
-      pixlyBucket.putObject(params, function (err, data) {
+      pixlyBucket.putObject(params, function (err, fileData) {
          console.log("PUT OBJECT!!!!");
          if (err) console.log("DATA ERROR!!!!!", err);
-         else console.log("PUT DATA!!!!!!", data);
+         else console.log("PUT DATA!!!!!!", fileData);
       });
-      return data.ETag;
    }
 
    /**
@@ -100,17 +99,17 @@ class PixlyAWS {
       });
    }
 
-   
+
    /**
     * Gets a single item in the bucket by key value
     */
-   static async getSingleObjectInBucket(keyVal){
+   static async getSingleObjectInBucket(keyVal) {
       //get params
-      params = {
+      let params = {
          Bucket: bucketName,
          Key: keyVal,
       };
-      
+
       // get object from bucket
       pixlyBucket.getObject(params, function (err, data) {
          console.log("GET OBJECT!!!!");
@@ -118,12 +117,12 @@ class PixlyAWS {
          else console.log("GET DATA!!!!!", data); // data.Body is buffer data
       });
    }
-   
 
-   static makeObjectLink(keyVal){
+
+   static makeObjectLink(keyVal) {
       return `${PIXLY_URL}/${keyVal}`;
    }
-   
+
 }
 
 module.exports = PixlyAWS;
