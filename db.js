@@ -33,7 +33,7 @@ const ImageModel = sequelize.define(
     title: { type: DataTypes.TEXT, allowNull: false },
     description: { type: DataTypes.TEXT, allowNull: false },
     uploaded_by: { type: DataTypes.TEXT, allowNull: false },
-    metadata: { type: DataTypes.TEXT, allowNull: true },
+    metadata: { type: DataTypes.JSON, allowNull: true },
   },
   { timestamps: false }
 );
