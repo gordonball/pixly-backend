@@ -22,15 +22,19 @@ async function testConnection() {
 }
 testConnection();
 
-const ImageModel = sequelize.define("images", {
-  image_url: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-    primaryKey: true,
+const ImageModel = sequelize.define(
+  "images",
+  {
+    image_url: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      primaryKey: true,
+    },
+    title: { type: DataTypes.TEXT, allowNull: false },
+    description: { type: DataTypes.TEXT, allowNull: false },
+    uploaded_by: { type: DataTypes.TEXT, allowNull: false },
   },
-  title: { type: DataTypes.TEXT, allowNull: false },
-  description: { type: DataTypes.TEXT, allowNull: false },
-  uploaded_by: { type: DataTypes.TEXT, allowNull: false },
-});
+  { timestamps: false }
+);
 
 module.exports = { sequelize, ImageModel };
