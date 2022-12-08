@@ -26,6 +26,7 @@ app.post("/images", upload.single("image"), async function (req, res, next) {
 
 
    console.log("!!!!!!!!!", req.file);
+   console.log("req.body>>>>>>>>>>>", req.body);
    const imageURL = await AWS.putObjectInBasket(req.file.buffer, req.file.originalname);
    const result = await Image.uploadImageData({title: "test", uploaded_by:"me", image_url:imageURL, description:"test"})
    console.log("database test", result);
