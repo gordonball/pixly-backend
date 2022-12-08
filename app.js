@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require("express");
+const ExifImage = require("exif").ExifImage;
 
 //allows processing of multipart forms
 const multer = require("multer");
@@ -24,6 +25,24 @@ app.get("/images", async function (req, res, next) {
 app.post("/images", upload.single("image"), async function (req, res, next) {
   console.log("!!!!!!!!!", req.file);
   console.log("req.body>>>>>>>>>>>", req.body);
+
+  let metaData;
+
+  try {
+    metaData = new ExifImage(req.file.buffer, function (error, exifData) {
+      if (error) {
+        console.log("Metadata error: ", error);
+      } else {
+        console.log("METADATA!!!!!", exifData);
+        return exifData;
+      }
+    });
+  } catch (error) {
+    console.log("Metadata error: ", error);
+  }
+
+  console.log("outside try METADATA!!!!!", metaData);
+
   const imageURL = await AWS.putObjectInBasket(
     req.file.buffer,
     req.file.originalname
@@ -33,7 +52,7 @@ app.post("/images", upload.single("image"), async function (req, res, next) {
     uploaded_by: "me",
     image_url: imageURL,
     description: "test",
-    metadata: 
+    metadata: metaData | null,
   });
   console.log("database test", result);
   return res.json({ url: imageURL });
