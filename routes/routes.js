@@ -18,6 +18,13 @@ router.get("/images", async function (req, res, next) {
   return res.json({ images });
 });
 
+/** Gets the metadata from an image,
+ *  uploads image to AWS and adds image to database.
+ *
+ * Returns image url as json object
+ * {url: imageURL}
+ *
+ * */
 router.post("/images", upload.single("image"), async function (req, res, next) {
   console.log("!!!!!!!!!", req.file);
   console.log("req.body>>>>>>>>>>>", req.body);
@@ -40,10 +47,12 @@ router.post("/images", upload.single("image"), async function (req, res, next) {
   return res.json({ url: imageURL });
 });
 
+/** Deletes image from AWS and from database */
 router.delete("/images/:filename", async function (req, res, next) {
   const image = req.params.filename;
-  console.log("delete image: ", image);
+  await Image.deleteImage(image);
   await AWS.removeSingleObjectFromBucket(image);
+  console.log("delete image: ", image);
 });
 
 module.exports = router;
