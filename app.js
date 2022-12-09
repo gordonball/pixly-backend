@@ -1,15 +1,14 @@
 "use strict";
 
 const express = require("express");
-
-const routes = require("./routes/routes");
-app.use("/", routes);
-
+const cors = require("cors");
 const app = express();
+const routes = require("./routes/routes");
+
+app.use(cors());
 app.use(express.json());
 
-const cors = require("cors");
-app.use(cors());
+app.use("/", routes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
