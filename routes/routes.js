@@ -33,7 +33,7 @@ router.post("/images", upload.single("image"), async function (req, res, next) {
 
   const metadata = await Image.getMetadata(req.file.buffer);
   console.log("App METADATA!!!!!", metadata);
-
+  //TODO: rename!
   const imageURL = await AWS.putObjectInBasket(
     req.file.buffer,
     req.file.originalname

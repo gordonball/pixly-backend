@@ -72,11 +72,13 @@ class PixlyAWS {
     };
 
     //   puts object in bucket
-    pixlyBucket.putObject(params, function (err, fileData) {
-      console.log("PUT OBJECT!!!!");
-      if (err) console.log("DATA ERROR!!!!!", err);
-      else console.log("PUT DATA!!!!!!", fileData);
-    });
+    await pixlyBucket
+      .putObject(params, function (err, fileData) {
+        console.log("PUT OBJECT!!!!");
+        if (err) console.log("DATA ERROR!!!!!", err);
+        else console.log("PUT DATA!!!!!!", fileData);
+      })
+      .promise();
 
     return this.makeObjectLink(keyVal);
   }
@@ -126,11 +128,13 @@ class PixlyAWS {
     };
 
     // delete object from bucket
-    pixlyBucket.deleteObject(params, function (err, data) {
-      console.log("!!!DELETE OBJECT");
-      if (err) console.log("DELETE ERROR!!!!!!", err, err.stack);
-      else console.log(`!!!Deleted ${keyVal} from bucket.`);
-    });
+    await pixlyBucket
+      .deleteObject(params, function (err, data) {
+        console.log("!!!DELETE OBJECT");
+        if (err) console.log("DELETE ERROR!!!!!!", err, err.stack);
+        else console.log(`!!!Deleted ${keyVal} from bucket.`);
+      })
+      .promise();
   }
 
   static makeObjectLink(keyVal) {
