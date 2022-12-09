@@ -7,6 +7,7 @@ const Image = require("../models/image");
 
 //allows processing of multipart forms
 const multer = require("multer");
+const PixlyAWS = require("../aws");
 const upload = multer({});
 
 /** Gets an array of all images, returns as json object
@@ -28,7 +29,7 @@ router.get("/images", async function (req, res, next) {
 router.post("/images", upload.single("image"), async function (req, res, next) {
   console.log("!!!!!!!!!", req.file);
   console.log("req.body>>>>>>>>>>>", req.body);
-  const {title, uploaded_by, description} = req.body;
+  const { title, uploaded_by, description } = req.body;
 
   const metadata = await Image.getMetadata(req.file.buffer);
   console.log("App METADATA!!!!!", metadata);
@@ -50,10 +51,13 @@ router.post("/images", upload.single("image"), async function (req, res, next) {
 
 /** Deletes image from AWS and from database */
 router.delete("/images/:filename", async function (req, res, next) {
-  const image = req.params.filename;
-  await Image.deleteImage(image);
-  await AWS.removeSingleObjectFromBucket(image);
-  console.log("delete image: ", image);
+  console.log("delete params", req.params);
+  const filename = req.params.filename;
+
+  const keyVal = PixlyAWS.makeObjectLink(filename);
+  await Image.deleteImage(keyVal);
+  // console.log("delete image: ", filename);
+  await AWS.removeSingleObjectFromBucket(filename);
 });
 
 module.exports = router;

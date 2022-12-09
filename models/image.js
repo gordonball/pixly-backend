@@ -44,8 +44,9 @@ class Image {
   }
 
   static async deleteImage(image) {
+    console.log(image);
     const result = ImageModel.destroy({
-      where: { image_url: image.image_url },
+      where: { image_url: image },
     });
   }
 }
