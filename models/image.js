@@ -42,6 +42,12 @@ class Image {
   static async getMetadata(image) {
     return parser.create(image).enableReturnTags(true).parse();
   }
+
+  static async deleteImage(image) {
+    const result = ImageModel.destroy({
+      where: { image_url: image.image_url },
+    });
+  }
 }
 
 module.exports = Image;
