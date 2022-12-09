@@ -28,6 +28,7 @@ router.get("/images", async function (req, res, next) {
 router.post("/images", upload.single("image"), async function (req, res, next) {
   console.log("!!!!!!!!!", req.file);
   console.log("req.body>>>>>>>>>>>", req.body);
+  const {title, uploaded_by, description} = req.body;
 
   const metadata = await Image.getMetadata(req.file.buffer);
   console.log("App METADATA!!!!!", metadata);
@@ -37,10 +38,10 @@ router.post("/images", upload.single("image"), async function (req, res, next) {
     req.file.originalname
   );
   const result = await Image.uploadImageData({
-    title: "test",
-    uploaded_by: "me",
+    title: title,
+    uploaded_by: uploaded_by,
     image_url: imageURL,
-    description: "test",
+    description: description,
     metadata: metadata.tags || null,
   });
   console.log("database test", result);
