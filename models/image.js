@@ -7,48 +7,57 @@ const parser = require("exif-parser");
 const { BadRequestError, NotFoundError } = require("../expressError");
 
 class Image {
-  /**
-   *  upload imageData to the database.
-   */
-  static async uploadImageData({
-    title,
-    uploaded_by,
-    image_url,
-    description,
-    metadata,
-  }) {
-    const result = await sequelize.transaction(
-      ImageModel.create({
-        title,
-        uploaded_by,
-        image_url,
-        description,
-        metadata,
-      })
-    );
+   /**
+    *  upload imageData to the database.
+    */
+   static async uploadImageData({
+      title,
+      uploaded_by,
+      image_url,
+      description,
+      metadata,
+   }) {
+      const result = await sequelize.transaction(
+         ImageModel.create({
+            title,
+            uploaded_by,
+            image_url,
+            description,
+            metadata,
+         })
+      );
 
-    console.log(result);
-    //Start transaction
-    //Add values to db
-    //Commit
-  }
+      console.log(result);
+      //Start transaction
+      //Add values to db
+      //Commit
+   }
 
-  static async getImages() {
-    const result = ImageModel.findAll();
+   /**
+    *  Get a list of all images from the database
+    */
+   static async getImages() {
+      const result = ImageModel.findAll();
 
-    return result;
-  }
+      return result;
+   }
 
-  static async getMetadata(image) {
-    return parser.create(image).enableReturnTags(true).parse();
-  }
+   /**
+    * Get image metadata from image buffer data
+    */
+   static async getMetadata(image) {
+      return parser.create(image).enableReturnTags(true).parse();
+   }
 
-  static async deleteImage(image) {
-    console.log(image);
-    const result = ImageModel.destroy({
-      where: { image_url: image },
-    });
-  }
+   /**
+    * Delete image from DB
+    */
+   static async deleteImage(image) {
+      console.log(image);
+      const result = ImageModel.destroy({
+         where: { image_url: image },
+      });
+   }
 }
 
 module.exports = Image;
